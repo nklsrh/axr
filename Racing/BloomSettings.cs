@@ -72,13 +72,14 @@ namespace BloomPostprocess
         {
             //                Name           Thresh  Blur Bloom  Base  BloomSat BaseSat
             new BloomSettings("Default",     0.8f,   1.5f,  0.8F,     1,    2,       4),
-            new BloomSettings("OrangeZone",  0.8f,   1f,  0.5F,     0.8f,    2,       3),
-            new BloomSettings("BlueZone",    1f,   2f,  1.4F,     1.2f,    1,       1),
+            new BloomSettings("OrangeZone",  0.8f,   1f,  0.5F,     0.8f,    2,       5),
+            new BloomSettings("BlueZone",    1f,   2f,  0.8F,     1.2f,    1,       1),
             new BloomSettings("TunnelEntrance",   0.1f,  1.5f,   0.1f,     0.2f,    0f,       0),
             new BloomSettings("TunnelExit",    0.8f,   1f,  2F,     3f,    0,       0),
             new BloomSettings("StartFinishLine",   0.9f,   3f,  20F,     10f,    2,       4),
             new BloomSettings("Chicane",   0.7f,  2f,   0.3f,     0.3f,    0f,       0.8f),
             new BloomSettings("Crash",  0.8f,   1f,  2F,     3f,    0,       0),
+            new BloomSettings("Soft",     1f,   0.7f, 5f,     1,    1,       1),
         };
     }
 }

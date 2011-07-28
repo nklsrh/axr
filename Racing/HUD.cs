@@ -35,7 +35,7 @@ namespace Racing
         public void Initialize(Game1 game)
         {
             // TODO: Add your initialization code here
-            OverlayImage = game.Content.Load<Texture2D>("HUD");
+            OverlayImage = game.Content.Load<Texture2D>("GlassHUD");
             sfont = game.Content.Load<SpriteFont>("sfont");
             HUDfont = game.Content.Load<SpriteFont>("Fonts//HUDfont");
             speedoImage = game.Content.Load<Texture2D>("OrangeGrunge");

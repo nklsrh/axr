@@ -70,8 +70,8 @@ namespace Racing
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(spriteFont, fps, new Vector2(33, 33), Color.White, 0f, Vector2.Zero, GraphicsDevice.Viewport.Width / 1280f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(spriteFont, fps, new Vector2(32, 32), Color.Black, 0f, Vector2.Zero, GraphicsDevice.Viewport.Width / 1280f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(spriteFont, fps, new Vector2(33, 33), Color.White, 0f, Vector2.Zero, 0.3f * GraphicsDevice.Viewport.Width / 1280f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(spriteFont, fps, new Vector2(32, 32), Color.Black, 0f, Vector2.Zero, 0.3f * GraphicsDevice.Viewport.Width / 1280f, SpriteEffects.None, 0);
 
             spriteBatch.End();
         }

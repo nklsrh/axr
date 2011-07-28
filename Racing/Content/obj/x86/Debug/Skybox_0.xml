@@ -3,7 +3,7 @@
   <Asset Type="Graphics:MeshContent">
     <Name>Tube03</Name>
     <Identity>
-      <SourceFilename>C:\Users\Nikhil\Documents\RacingWheel\Racing\Content\Skybox.FBX</SourceFilename>
+      <SourceFilename>C:\Users\Nikhil\Documents\AXON\Racing\Content\Skybox.FBX</SourceFilename>
       <SourceTool>FbxImporter</SourceTool>
     </Identity>
     <Transform>1 0 0 0 0 2.83274923E-16 -1 0 0 1 2.83274923E-16 0 31611.4629 -11488.1758 12464.2861 1</Transform>
@@ -26,7 +26,7 @@
     <Resource ID="#Resource1" Type="Graphics:BasicMaterialContent">
       <Name>Material #35j</Name>
       <Identity>
-        <SourceFilename>C:\Users\Nikhil\Documents\RacingWheel\Racing\Content\Skybox.FBX</SourceFilename>
+        <SourceFilename>C:\Users\Nikhil\Documents\AXON\Racing\Content\Skybox.FBX</SourceFilename>
         <SourceTool>FbxImporter</SourceTool>
       </Identity>
       <OpaqueData>
@@ -47,6 +47,6 @@
     </Resource>
   </Resources>
   <ExternalReferences>
-    <ExternalReference ID="#External1" TargetType="Graphics:TextureContent">FBX\332219AB\Skybox.fbm\Tube03DiffuseMap.tga</ExternalReference>
+    <ExternalReference ID="#External1" TargetType="Graphics:TextureContent">FBX\88AF16D8\Skybox.fbm\Tube03DiffuseMap.tga</ExternalReference>
   </ExternalReferences>
 </XnaContent>

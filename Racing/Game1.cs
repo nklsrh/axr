@@ -34,10 +34,6 @@ namespace Racing
 
         BoundingSphere StartFinishLine, Turn1, TunnelEntrance, OrangeZone, BlueZone, TunnelExit, Chicane;
 
-        public User[] localUsers;
-        public IUserInterface users;
-        public User u1;
-
         bool isLapComplete = false;
         public TimeSpan SessionTime;
         
@@ -45,7 +41,7 @@ namespace Racing
 
         public SpriteFont sfont;
 
-        public bool DevGamePadMode = true;
+        public bool DevGamePadMode = false;
         public bool GodMode = false;
 
         public Vector2 DisplayScale;
@@ -56,15 +52,24 @@ namespace Racing
 
         public enum Screen
         {
+            WelcomeScreen,
             Main,
             Car,
             Track,
+            Garage,
             Game
         }
 
-        public Screen screen = Screen.Main;
+        public Screen screen = Screen.WelcomeScreen;
         public Menu menu;
         public Wheel wheel;
+
+        public Song Song;
+        public SoundEffect Engine;
+        public SoundEffect SelectionSound;
+        public SoundEffect OptionClicked;
+
+        public Speech SpeechEngine;
 
         public Game1()
         {
@@ -82,6 +87,9 @@ namespace Racing
             new UserControl(this);
             BloomPostprocessGame();
 
+            SpeechEngine = new Speech(this);
+            SpeechEngine.ResetAllDialogs();
+
             menu = new Menu(this);
         }
 
@@ -89,7 +97,7 @@ namespace Racing
         {
             graphics.PreferredBackBufferHeight = height;
             graphics.PreferredBackBufferWidth = width;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = IsFullScreen;
             graphics.ApplyChanges();
         }
 
@@ -102,6 +110,16 @@ namespace Racing
         {
             if (screen == Screen.Game)
             {
+                try
+                {                    
+                        Song = Content.Load<Song>("Audio//Music//Acetone");
+                        MediaPlayer.IsRepeating = true;
+                        MediaPlayer.Play(Song);
+                        MediaPlayer.Volume = 1f;
+                    
+                }
+                catch { }
+
                 camera = new Camera(this);
                 camera.Position = new Vector3(3000, 15000, 3000);
                 camera.LookAt = Vector3.Zero;
@@ -111,7 +129,7 @@ namespace Racing
                 car.Position.Z = 22084;
                 car.Position.Y = 1000f;
                 car.Direction = new Vector3(-0.32759f, 0, -0.9448f);
-                car.Initialize();
+                car.Initialize(this);
 
                 chaseCamera = new ChaseCamera();
                 chaseCamera.Up = Vector3.Up;
@@ -137,15 +155,17 @@ namespace Racing
             }
 
             if (screen != Screen.Game)
-            {
-                menu.Initialize(this);
+            {             
+                menu.Initialize(this);                
             }
 
-            if (!DevGamePadMode)
-            {
                 wheel = new Wheel(this);
-                wheel.Initialize(this);
-            }
+                wheel.CheckingForceFeedback(this);
+
+                if (!DevGamePadMode)
+                {
+                    wheel.Initialize(this);
+                }
 
             base.Initialize();
         }
@@ -154,38 +174,40 @@ namespace Racing
          public void BloomPostprocessGame()
         {
             bloom = new BloomComponent(this);
-            //graphics.ToggleFullScreen();
-            //Components.Add(bloom);
+            Components.Add(bloom);
         }
 
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            users = (IUserInterface)Services.GetService(typeof(IUserInterface));
+            spriteBatch = new SpriteBatch(GraphicsDevice);          
+
             FPSCounter.spriteFont = Content.Load<SpriteFont>("sfont");
 
             if (screen == Screen.Game)
             {
                 car.Model = Content.Load<Model>("Cars//AXR3");
-                TrackModel = Content.Load<Model>("Track//Track_High_Dynamic");
-                EnvironModel = Content.Load<Model>("Track//Environment_Awesome_Textured");
+                TrackModel = Content.Load<Model>("New//Track_Medium_Black");
+                EnvironModel = Content.Load<Model>("New//Environment_Awesome_Textured");
                 
                 HeightMap = Content.Load<Texture2D>("Zone_HeightMap");
                 
                 Marker = Content.Load<Texture2D>("OrangeGrunge");
-                Skybox = Content.Load<Model>("Skybox");
+                Skybox = Content.Load<Model>("Skybox");                
             }
+
+            Engine = Content.Load<SoundEffect>("Audio//Effects//Hit");
+            SelectionSound = Content.Load<SoundEffect>("Audio//Effects//OptionSelect");
+            OptionClicked = Content.Load<SoundEffect>("Audio//Effects//ClickedSound");
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (screen == Screen.Game)
             {
-                if (users.FindUserOne())
-                {
-                    u1 = users.GetUser(0);
-                }
+                float engineVolume = (float)(car.Speed / car.TopSpeed);
+                Engine.Play(0.5f, MathHelper.Clamp(engineVolume - 1, -1, 1), 0);
+
                 if (!DevGamePadMode) { wheel.Update(this, gameTime); }
 
                 if (!GodMode)
@@ -203,6 +225,30 @@ namespace Racing
                         }
                         car.CurrentLap = TimeSpan.Zero;
                         car.LapCount++;
+
+                        if (SessionTime <= TimeSpan.Zero)
+                        {
+                            if (car.FastestLap > Rival.FastestLap)
+                            {
+                                if (!SpeechEngine.TestEndFail)
+                                {
+                                    SpeechEngine.DialogEffectInstance.Stop();
+                                    SpeechEngine.PlayDialog(this, "TestEndFail");
+                                }
+                            }
+
+                            screen = Screen.Main;
+                            menu.Initialize(this);
+                        }
+
+                        if (car.LastLap > Rival.FastestLap)
+                        {
+                            if (!SpeechEngine.NotQuickEnuf)
+                            {
+                                SpeechEngine.DialogEffectInstance.Stop();
+                                SpeechEngine.PlayDialog(this, "NotQuickEnuf");
+                            }
+                        }
                     }
                     else
                     {
@@ -210,7 +256,7 @@ namespace Racing
                         {
                             car.LapCount = 0;
                             isLapComplete = true;
-                            car.CurrentLap = TimeSpan.Zero;
+                            car.CurrentLap = TimeSpan.Zero;                            
                         }
                     }
                     if (Turn1.Contains(car.Position) == ContainmentType.Contains && isLapComplete)
@@ -232,12 +278,13 @@ namespace Racing
                     }
                     else
                     {
-                        chaseCamera.ChasePosition = car.Position;
+                        chaseCamera.ChasePosition = new Vector3(car.Position.X, car.Position.Y + 100, car.Position.Z);
                         chaseCamera.ChaseDirection = car.Direction;
-                        chaseCamera.desiredPositionOffset.X = 0;
-                        chaseCamera.desiredPositionOffset.Y = 0;
-                        chaseCamera.desiredPositionOffset.Z = 0;
-                        chaseCamera.Update(gameTime);
+                        chaseCamera.desiredPositionOffset.X = car.WheelTurn * 2.0f;
+                        chaseCamera.desiredPositionOffset.Y = -60.0f;
+                        chaseCamera.desiredPositionOffset.Z = (-55.0f) - 25 * (car.Speed/car.TopSpeed);
+                        chaseCamera.FieldOfView = MathHelper.ToRadians(65.0f);
+                        chaseCamera.Reset();
                     }
 
                     Rival.Update(gameTime);
@@ -274,6 +321,7 @@ namespace Racing
             {
                 menu.Update(this);
             }
+
             base.Update(gameTime);
         }
 
@@ -310,12 +358,12 @@ namespace Racing
 
         void SmoothBlendingBloom(int index)
         {
-            bloom.Settings.BaseIntensity += (BloomSettings.PresetSettings[index].BaseIntensity - bloom.Settings.BaseIntensity)/5f;
-            bloom.Settings.BaseSaturation += (BloomSettings.PresetSettings[index].BaseSaturation - bloom.Settings.BaseSaturation) / 5f;
-            bloom.Settings.BloomIntensity += (BloomSettings.PresetSettings[index].BloomIntensity - bloom.Settings.BloomIntensity) / 5f;
-            bloom.Settings.BloomSaturation += (BloomSettings.PresetSettings[index].BloomSaturation - bloom.Settings.BloomSaturation) / 5f;
-            bloom.Settings.BloomThreshold += (BloomSettings.PresetSettings[index].BloomThreshold - bloom.Settings.BloomThreshold) / 5f;
-            bloom.Settings.BlurAmount += (BloomSettings.PresetSettings[index].BlurAmount - bloom.Settings.BlurAmount) / 5f;
+            bloom.Settings.BaseIntensity += (BloomSettings.PresetSettings[index].BaseIntensity - bloom.Settings.BaseIntensity)/45f;
+            bloom.Settings.BaseSaturation += (BloomSettings.PresetSettings[index].BaseSaturation - bloom.Settings.BaseSaturation) / 45f;
+            bloom.Settings.BloomIntensity += (BloomSettings.PresetSettings[index].BloomIntensity - bloom.Settings.BloomIntensity) / 45f;
+            bloom.Settings.BloomSaturation += (BloomSettings.PresetSettings[index].BloomSaturation - bloom.Settings.BloomSaturation) / 45f;
+            bloom.Settings.BloomThreshold += (BloomSettings.PresetSettings[index].BloomThreshold - bloom.Settings.BloomThreshold) /45f;
+            bloom.Settings.BlurAmount += (BloomSettings.PresetSettings[index].BlurAmount - bloom.Settings.BlurAmount) / 45f;
         }
 
         protected override void Draw(GameTime gameTime)
@@ -340,9 +388,9 @@ namespace Racing
                 DrawModel(EnvironModel, Matrix.Identity);
                 DrawModel(Skybox, Matrix.Identity);
 
-                graphics.GraphicsDevice.RenderState.CullMode = CullMode.None;
+                graphics.GraphicsDevice.RenderState.CullMode = CullMode.CullClockwiseFace;
 
-                if (DevGamePadMode)
+                //if (DevGamePadMode)
                     car.Draw(car.Model, chaseCamera);
 
                 HUD.Draw(this, spriteBatch);

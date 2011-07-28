@@ -3,7 +3,7 @@
   <Asset Type="Graphics:NodeContent">
     <Name>RootNode</Name>
     <Identity>
-      <SourceFilename>C:\Users\Nikhil\Documents\RacingWheel\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
+      <SourceFilename>C:\Users\Nikhil\Documents\AXON\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
       <SourceTool>FbxImporter</SourceTool>
     </Identity>
     <Transform>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</Transform>
@@ -251,7 +251,7 @@
     <Resource ID="#Resource1" Type="Graphics:BasicMaterialContent">
       <Name>03 - Default</Name>
       <Identity>
-        <SourceFilename>C:\Users\Nikhil\Documents\RacingWheel\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
+        <SourceFilename>C:\Users\Nikhil\Documents\AXON\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
         <SourceTool>FbxImporter</SourceTool>
       </Identity>
       <OpaqueData>
@@ -279,7 +279,7 @@
     <Resource ID="#Resource2" Type="Graphics:BasicMaterialContent">
       <Name>06 - Default</Name>
       <Identity>
-        <SourceFilename>C:\Users\Nikhil\Documents\RacingWheel\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
+        <SourceFilename>C:\Users\Nikhil\Documents\AXON\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
         <SourceTool>FbxImporter</SourceTool>
       </Identity>
       <OpaqueData>
@@ -301,7 +301,7 @@
     <Resource ID="#Resource3" Type="Graphics:BasicMaterialContent">
       <Name>05 - Default</Name>
       <Identity>
-        <SourceFilename>C:\Users\Nikhil\Documents\RacingWheel\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
+        <SourceFilename>C:\Users\Nikhil\Documents\AXON\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
         <SourceTool>FbxImporter</SourceTool>
       </Identity>
       <OpaqueData>
@@ -323,7 +323,7 @@
     <Resource ID="#Resource4" Type="Graphics:BasicMaterialContent">
       <Name>01 - Default</Name>
       <Identity>
-        <SourceFilename>C:\Users\Nikhil\Documents\RacingWheel\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
+        <SourceFilename>C:\Users\Nikhil\Documents\AXON\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
         <SourceTool>FbxImporter</SourceTool>
       </Identity>
       <OpaqueData>
@@ -345,7 +345,7 @@
     <Resource ID="#Resource5" Type="Graphics:BasicMaterialContent">
       <Name>02 - Default</Name>
       <Identity>
-        <SourceFilename>C:\Users\Nikhil\Documents\RacingWheel\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
+        <SourceFilename>C:\Users\Nikhil\Documents\AXON\Racing\Content\Cars\AXR_finalTexture.FBX</SourceFilename>
         <SourceTool>FbxImporter</SourceTool>
       </Identity>
       <OpaqueData>
@@ -366,10 +366,10 @@
     </Resource>
   </Resources>
   <ExternalReferences>
-    <ExternalReference ID="#External1" TargetType="Graphics:TextureContent">..\FBX\E61F1FD5\AXR_finalTexture.fbm\OrangeBoxMetal.png</ExternalReference>
-    <ExternalReference ID="#External2" TargetType="Graphics:TextureContent">..\FBX\E61F1FD5\AXR_finalTexture.fbm\BlackMetal.png</ExternalReference>
-    <ExternalReference ID="#External3" TargetType="Graphics:TextureContent">..\FBX\E61F1FD5\AXR_finalTexture.fbm\SideWings.png</ExternalReference>
-    <ExternalReference ID="#External4" TargetType="Graphics:TextureContent">..\FBX\E61F1FD5\AXR_finalTexture.fbm\AXR2.png</ExternalReference>
-    <ExternalReference ID="#External5" TargetType="Graphics:TextureContent">..\FBX\E61F1FD5\AXR_finalTexture.fbm\Tailfin.png</ExternalReference>
+    <ExternalReference ID="#External1" TargetType="Graphics:TextureContent">..\FBX\115E1D02\AXR_finalTexture.fbm\OrangeBoxMetal.png</ExternalReference>
+    <ExternalReference ID="#External2" TargetType="Graphics:TextureContent">..\FBX\115E1D02\AXR_finalTexture.fbm\BlackMetal.png</ExternalReference>
+    <ExternalReference ID="#External3" TargetType="Graphics:TextureContent">..\FBX\115E1D02\AXR_finalTexture.fbm\SideWings.png</ExternalReference>
+    <ExternalReference ID="#External4" TargetType="Graphics:TextureContent">..\FBX\115E1D02\AXR_finalTexture.fbm\AXR2.png</ExternalReference>
+    <ExternalReference ID="#External5" TargetType="Graphics:TextureContent">..\FBX\115E1D02\AXR_finalTexture.fbm\Tailfin.png</ExternalReference>
   </ExternalReferences>
 </XnaContent>

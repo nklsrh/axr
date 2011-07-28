@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Storage;
 using Microsoft.DirectX.DirectInput;
 using BloomPostprocess;
 
+
 namespace Racing
 {
     /// <summary>
@@ -31,14 +32,10 @@ namespace Racing
         public Matrix world;
         public TimeSpan CurrentLap, LastLap, FastestLap;
         public int LapCount;
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
-        /// 
+
         public Device WheelDevice;
 
-        public override void Initialize()
+        public void Initialize(Game1 game)
         {
             // TODO: Add your initialization code here
             Power = 0;
@@ -54,6 +51,7 @@ namespace Racing
 
             base.Initialize();
         }
+
 
         /// <summary>
         /// Allows the game component to update itself.
@@ -80,25 +78,25 @@ namespace Racing
             world.Translation = Position;
 
             Collisions(game);
-
+          
             CurrentLap += gameTime.ElapsedGameTime;
-            
+
             base.Update(gameTime);
         }
 
         void InputAndPhysics(Game1 game)
         {
-            game.u1 = game.users.GetUser(0);
             if (Speed < TopSpeed)
             {
                 Power = GamePad.GetState(PlayerIndex.One).Triggers.Right;
+
                 if (GamePad.GetState(PlayerIndex.One).Triggers.Right == 0 && Speed > 0) { Speed -= 0.25f; }
 
                 if (Microsoft.Xna.Framework.Input.Keyboard.GetState(PlayerIndex.One).IsKeyDown(Keys.Up)) { Power++; }
 
                 if (!game.DevGamePadMode)
                 {
-                    Power = (game.u1.GetLeftStick().Y + 1) / 2.0f;
+                    Power = (10000 - game.wheel.joystick.CurrentJoystickState.Y) / 10000.0f;
                 }
 
                 Grip = 1 - ((Speed) / TopSpeed);
@@ -121,14 +119,18 @@ namespace Racing
 
                 if (!game.DevGamePadMode)
                 {
-                    Speed -= ((game.u1.GetRightStick().Y + 1) / 2.0f) * 2.5f;
-                    WheelTurn = -game.u1.GetLeftStick().X;
+                    WheelTurn = -(game.wheel.joystick.CurrentJoystickState.X - 5000) / 5000.0f;
+                    if (game.wheel.joystick.CurrentJoystickState.Rz < 10000)
+                    {
+                        Speed -= 2.5f;
+                    }
                 }
 
                 Turn += WheelTurn * Grip;
                 Angle = MathHelper.ToRadians(Turn);
                 Turn += (0 - Turn) / 15f;
             }
+            //game.Window.Title = game.wheel.joystick.CurrentJoystickState.X.ToString() + "  " + game.wheel.joystick.CurrentJoystickState.Y.ToString();
         }
 
         Vector2 MarkerPosition;
@@ -143,11 +145,18 @@ namespace Racing
             Color bgColor = bgColorArr00[0];
             if (bgColor.R < 200)
             {
+                game.Engine.Play(1, 0f, WheelTurn);
+
                 Speed = -Speed * 0.25f;
                 game.bloom.Settings = BloomSettings.PresetSettings[7];
 
                 game.chaseCamera.ChaseDirection = PreviousDirection;
                 Position = PreviousPosition;
+
+                Random random = new Random();
+
+                if(!game.DevGamePadMode)
+                game.wheel.WheelForceFeedback = (int)(WheelTurn * 500);
             }
         }
 
@@ -183,6 +192,7 @@ namespace Racing
                 }
                 mesh.Draw();
             }
+            
         }
 
     }
